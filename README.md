@@ -1,5 +1,5 @@
-# nodejs-express-jumpstart
-NodeJs - ExpressJs - Mysql - SocketIO 
+# Scheduler
+NodeJs Resource Booking Service
 
 All Apis will respond with proper HTTP Response Code. A 200OK response code means success. Any response code other than 200OK means something wrong happend.
 
