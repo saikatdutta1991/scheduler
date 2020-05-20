@@ -7,6 +7,11 @@ exports.up = async (knex) => {
       .primary()
       .defaultTo(knex.raw("uuid_generate_v4()"));
     table
+      .uuid("locationId")
+      .references("id")
+      .inTable("locations")
+      .onDelete("CASCADE");
+    table
       .uuid("serviceId")
       .references("id")
       .inTable("services")

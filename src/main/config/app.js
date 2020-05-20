@@ -17,10 +17,6 @@ module.exports = {
     FORBIDDEN: 403,
   },
   constants: {
-    provider: {
-      GOOGLE: "GOOGLE",
-      FACEBOOk: "FACEBOOK",
-    },
     role: {
       USER: "user",
       ADMIN: "admin",
