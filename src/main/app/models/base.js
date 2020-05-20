@@ -14,12 +14,12 @@ class Base extends Model {
   }
 
   $beforeInsert() {
-    this.created_at = date.nowString();
-    this.updated_at = date.nowString();
+    this.createdAt = date.nowString();
+    this.updatedAt = date.nowString();
   }
 
   $beforeUpdate() {
-    this.updated_at = date.nowString();
+    this.updatedAt = date.nowString();
   }
 }
 
