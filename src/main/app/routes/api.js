@@ -5,6 +5,7 @@ const _ = require("lodash");
 const ServiceModel = require("../models/service");
 const ResourceModel = require("../models/resource");
 const EventModel = require("../models/event");
+// new change
 /** 
 const init = async () => {
   await EventModel.query().delete();
