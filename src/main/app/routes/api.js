@@ -34,10 +34,6 @@ const init = async () => {
 };
 init();
 
-router.get("/", (req, res) => {
-  return sendResponse(res, codes.OK, "OK", "Ok");
-});
-
 const calculateIntervalBlocks = (startDate, endDate, duration) => {
   const blocks = [];
   while (startDate <= endDate) {
@@ -126,10 +122,9 @@ router.get("/slots", async (req, res) => {
     blocks,
   });
 });
-*/
-router.get("/slots", async function (req, res) {
-  await redisClient.del("key");
-  console.log(await redisClient.get("key"));
-  res.send("sadf");
+
+router.get("/", (req, res) => {
+  return sendResponse(res, codes.OK, "OK", "Ok");
 });
+
 app.use("/api/v1/", router);
