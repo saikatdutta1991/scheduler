@@ -5,8 +5,11 @@ const _ = require("lodash");
 const ServiceModel = require("../models/service");
 const ResourceModel = require("../models/resource");
 const EventModel = require("../models/event");
+
 const redisClient = require("../commons/redis");
 redisClient.set("key", "value");
+
+// new change
 /** 
 const init = async () => {
   await EventModel.query().delete();
