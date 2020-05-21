@@ -6,6 +6,11 @@ module.exports = {
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   awsS3Bucket: process.env.AWS_S3_BUCKET,
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  },
   codes: {
     UNAUTHORIZED: 401,
     CREATED: 201,

@@ -6,15 +6,6 @@ class Resource extends Base {
     return "resources";
   }
 
-  get $secureFields() {
-    return [];
-  }
-
-  $formatJson(json, options) {
-    json = super.$formatJson(json, options);
-    return _.omit(json, this.$secureFields);
-  }
-
   static relationMappings = {
     events: {
       relation: Base.HasManyRelation,

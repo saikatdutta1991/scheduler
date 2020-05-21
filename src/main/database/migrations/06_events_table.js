@@ -21,6 +21,11 @@ exports.up = async (knex) => {
       .references("id")
       .inTable("resources")
       .onDelete("CASCADE");
+    table
+      .uuid("guestId")
+      .references("id")
+      .inTable("guests")
+      .onDelete("CASCADE");
     table.timestamp("startTime");
     table.timestamp("endTime");
     table.string("status", 32);

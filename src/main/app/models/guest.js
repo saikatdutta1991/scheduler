@@ -1,10 +1,10 @@
 const _ = require("lodash");
 const Base = require("./base");
 
-class Event extends Base {
+class Guest extends Base {
   static get tableName() {
-    return "events";
+    return "guests";
   }
 }
 
-module.exports = Event;
+module.exports = User;

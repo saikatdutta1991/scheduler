@@ -21,6 +21,15 @@ class Base extends Model {
   $beforeUpdate() {
     this.updatedAt = date.nowString();
   }
+
+  get $secureFields() {
+    return [];
+  }
+
+  $formatJson(json, options) {
+    json = super.$formatJson(json, options);
+    return _.omit(json, this.$secureFields);
+  }
 }
 
 module.exports = Base;

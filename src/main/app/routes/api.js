@@ -5,6 +5,8 @@ const _ = require("lodash");
 const ServiceModel = require("../models/service");
 const ResourceModel = require("../models/resource");
 const EventModel = require("../models/event");
+const redisClient = require("../commons/redis");
+redisClient.set("key", "value");
 /** 
 const init = async () => {
   await EventModel.query().delete();
@@ -122,4 +124,9 @@ router.get("/slots", async (req, res) => {
   });
 });
 */
+router.get("/slots", async function (req, res) {
+  await redisClient.del("key");
+  console.log(await redisClient.get("key"));
+  res.send("sadf");
+});
 app.use("/api/v1/", router);
