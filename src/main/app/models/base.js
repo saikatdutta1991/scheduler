@@ -5,6 +5,7 @@ const knex = require("../commons/knex");
 const { Model } = require("objection");
 const ChunkQueryBuilder = require("./chunkQueryBuilder");
 const date = require("../commons/date");
+const _ = require("lodash");
 
 Model.knex(knex); // pass the knex instance to Objection
 
