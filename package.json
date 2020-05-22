@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./bin/dev.sh",
-    "prod": "./bin/prod.sh",
-    "start": "node ./src/main/index.js"
+    "dev": "NODE_ENV=development nodemon ./src/main/index.js",
+    "prod": "NODE_ENV=development node ./src/main/index.js",
+    "start": "npm run prod",
+    "db:migrate": "knex migrate:latest",
+    "db:seed": "knex seed:run",
+    "apikey:generate": "node ./src/main/generateAPIKey.js"
   },
   "author": "Saikat Dutta",
   "license": "ISC",

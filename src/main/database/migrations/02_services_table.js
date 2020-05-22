@@ -6,9 +6,10 @@ exports.up = async (knex) => {
       .notNullable()
       .primary()
       .defaultTo(knex.raw("uuid_generate_v4()"));
+    table.string("code", 36);
     table.string("name", 128);
     table.string("description", 512);
-    table.time("duration");
+    table.integer("duration");
     table
       .timestamp("createdAt")
       .notNullable()

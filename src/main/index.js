@@ -1,3 +1,4 @@
+require("./app/commons/env.loader");
 const http = require("http");
 const app = require("./app");
 const io = require("./app/commons/socket-io");

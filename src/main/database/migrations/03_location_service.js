@@ -1,6 +1,6 @@
 exports.up = async (knex) => {
   await knex.raw('create extension if not exists "uuid-ossp"');
-  return knex.schema.createTable("location_service", function (table) {
+  return knex.schema.createTable("location_services", function (table) {
     table
       .uuid("id")
       .notNullable()

@@ -28,7 +28,8 @@ exports.up = async (knex) => {
       .onDelete("CASCADE");
     table.timestamp("startTime");
     table.timestamp("endTime");
-    table.string("status", 32);
+    table.string("type", 32); // Ex: booking, holiday
+    table.boolean("isConfirmed");
     table
       .timestamp("createdAt")
       .notNullable()

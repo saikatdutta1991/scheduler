@@ -2,14 +2,10 @@ const jwt = require("jsonwebtoken");
 const AppConfig = require("../../config/app");
 const Boom = require("@hapi/boom");
 const _ = require("lodash");
-// const Logger = require("../commons/logger");
 
 const customize = (payload) => {
   /** set default values */
   _.set(payload, "sub", _.get(payload, "sub", 0));
-  _.set(payload, "role", _.get(payload, "role", "unknown"));
-  const twodaysahead = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2;
-  _.set(payload, "exp", _.get(payload, "exp", twodaysahead));
   _.set(payload, "iss", _.get(payload, "iss", AppConfig.appName));
   return payload;
 };

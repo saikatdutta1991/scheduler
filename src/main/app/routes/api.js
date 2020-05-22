@@ -1,13 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const moment = require("moment");
-const _ = require("lodash");
-const ServiceModel = require("../models/service");
-const ResourceModel = require("../models/resource");
-const EventModel = require("../models/event");
+const checkApiKey = require("../middlewares/checkApiKey");
 
-const redisClient = require("../commons/redis");
-redisClient.set("key", "value");
+router.use(checkApiKey);
 
 // new change
 /** 
@@ -122,6 +117,7 @@ router.get("/slots", async (req, res) => {
     blocks,
   });
 });
+*/
 
 router.get("/", (req, res) => {
   return sendResponse(res, codes.OK, "OK", "Ok");
