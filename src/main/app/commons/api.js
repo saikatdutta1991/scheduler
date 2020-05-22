@@ -4,9 +4,14 @@ const Boom = require("@hapi/boom");
 
 /** sends generic api json response */
 module.exports.sendResponse = (response, statusCode, type, message, data) => {
-  response.status(statusCode).json({
-    type: type,
-    message: message,
-    data: data,
-  });
+  const json = {
+    type,
+    message,
+  };
+
+  if (data) {
+    json.data = data;
+  }
+
+  response.status(statusCode).json(json);
 };

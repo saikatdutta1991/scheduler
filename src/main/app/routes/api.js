@@ -3,9 +3,6 @@ const router = express.Router();
 const checkApiKey = require("../middlewares/checkApiKey");
 const LocationController = require("../controllers/location");
 
-require('../commons/redis').set('key', 'value');
-
-
 // const EventModel = require("../models/event")
 
 // const moment = require("moment-timezone");
@@ -45,11 +42,21 @@ require('../commons/redis').set('key', 'value');
 //   console.timeEnd("blocks");
 
 router.use(checkApiKey);
+router.post(
+  "/locations",
+  LocationController.createLocation.validators,
+  LocationController.createLocation
+);
 router.get("/locations", LocationController.getLocations);
 router.get(
   "/locations/:id",
   LocationController.getLocation.validators,
   LocationController.getLocation
+);
+router.delete(
+  "/locations/:id",
+  LocationController.deleteLocation.validators,
+  LocationController.deleteLocation
 );
 
 // new change
