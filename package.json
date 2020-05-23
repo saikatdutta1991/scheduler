@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development nodemon ./src/main/index.js",
-    "prod": "NODE_ENV=development node ./src/main/index.js",
+    "prod": "NODE_ENV=production node ./src/main/index.js",
     "start": "node ./src/main/index.js",
     "db:migrate": "knex migrate:latest",
     "db:seed": "knex seed:run",

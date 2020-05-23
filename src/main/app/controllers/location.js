@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
+const _ = require("lodash");
 const validator = require("../commons/validator");
 const LocationModel = require("../models/location");
 
@@ -45,23 +46,31 @@ deleteLocation.validators = [
 const createLocation = async (req, res) => {
   const { body: payload } = req;
 
-  // Check location code not duplicate
+  // Check if record exists by id
   const record = await LocationModel.query()
     .select("id")
-    .where({ code: payload.code })
+    .where({ id: _.get(payload, "id", null) })
     .first();
 
+  // Location exists, so update
   if (record) {
-    throw Boom.badRequest("Duplicate location code entered");
+    _.omit(payload, "id");
+
+    const location = await LocationModel.query().updateAndFetchById(
+      record.id,
+      payload
+    );
+
+    return sendResponse(res, codes.OK, "OK", "Location updated", location);
+  } else {
+    const location = await LocationModel.query().insertAndFetch(payload);
+    return sendResponse(res, codes.CREATED, "OK", "Location created", location);
   }
-
-  const location = await LocationModel.query().insertAndFetch(payload);
-
-  sendResponse(res, codes.CREATED, "OK", "Location created", location);
 };
 createLocation.validators = [
   validator.body(
     Joi.object({
+      id: LocationModel.validationRules.id.optional(),
       code: LocationModel.validationRules.code.required(),
       name: LocationModel.validationRules.name.required(),
       description: LocationModel.validationRules.description

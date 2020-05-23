@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const checkApiKey = require("../middlewares/checkApiKey");
-const LocationController = require("../controllers/location");
+const Location = require("../controllers/location");
+const Service = require("../controllers/service");
 
 // const EventModel = require("../models/event")
 
@@ -42,21 +43,34 @@ const LocationController = require("../controllers/location");
 //   console.timeEnd("blocks");
 
 router.use(checkApiKey);
-router.post(
-  "/locations",
-  LocationController.createLocation.validators,
-  LocationController.createLocation
+router.put(
+  "/services",
+  Service.createService.validators,
+  Service.createService
 );
-router.get("/locations", LocationController.getLocations);
+router.get("/services", Service.getServices);
+router.get("/services/:id", Service.getService.validators, Service.getService);
+router.delete(
+  "/services/:id",
+  Service.deleteService.validators,
+  Service.deleteService
+);
+
+router.put(
+  "/locations",
+  Location.createLocation.validators,
+  Location.createLocation
+);
+router.get("/locations", Location.getLocations);
 router.get(
   "/locations/:id",
-  LocationController.getLocation.validators,
-  LocationController.getLocation
+  Location.getLocation.validators,
+  Location.getLocation
 );
 router.delete(
   "/locations/:id",
-  LocationController.deleteLocation.validators,
-  LocationController.deleteLocation
+  Location.deleteLocation.validators,
+  Location.deleteLocation
 );
 
 // new change
