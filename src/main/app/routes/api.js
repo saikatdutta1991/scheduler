@@ -3,6 +3,8 @@ const router = express.Router();
 const checkApiKey = require("../middlewares/checkApiKey");
 const Location = require("../controllers/location");
 const Service = require("../controllers/service");
+const Resource = require("../controllers/resource");
+const Guest = require("../controllers/guest");
 
 // const EventModel = require("../models/event")
 
@@ -43,34 +45,46 @@ const Service = require("../controllers/service");
 //   console.timeEnd("blocks");
 
 router.use(checkApiKey);
-router.put(
-  "/services",
-  Service.createService.validators,
-  Service.createService
-);
-router.get("/services", Service.getServices);
-router.get("/services/:id", Service.getService.validators, Service.getService);
-router.delete(
-  "/services/:id",
-  Service.deleteService.validators,
-  Service.deleteService
-);
+
+router.put("/guests", Guest.validators, Guest.create.bind(Guest));
+router.get("/guests", Guest.all.bind(Guest));
+router.get("/guests/:id", Guest.one.bind(Guest));
+router.delete("/guests/:id", Guest.deleteValidators, Guest.delete.bind(Guest));
 
 router.put(
-  "/locations",
-  Location.createLocation.validators,
-  Location.createLocation
+  "/resources",
+  Resource.createValidators,
+  Resource.create.bind(Resource)
 );
-router.get("/locations", Location.getLocations);
-router.get(
-  "/locations/:id",
-  Location.getLocation.validators,
-  Location.getLocation
+router.get("/resources", Resource.all.bind(Resource));
+router.get("/resources/:id", Resource.one.bind(Resource));
+router.delete(
+  "/resources/:id",
+  Resource.deleteValidators,
+  Resource.delete.bind(Resource)
 );
+
+router.put("/services", Service.validators, Service.create.bind(Service));
+router.get("/services", Service.all.bind(Service));
+router.get("/services/:id", Service.one.bind(Service));
+router.delete(
+  "/services/:id",
+  Service.deleteValidators,
+  Service.delete.bind(Service)
+);
+
+router.put("/locations", Location.validators, Location.create.bind(Location));
+router.get("/locations", Location.all.bind(Location));
+router.get("/locations/:id", Location.one.bind(Location));
 router.delete(
   "/locations/:id",
-  Location.deleteLocation.validators,
-  Location.deleteLocation
+  Location.deleteValidators,
+  Location.delete.bind(Location)
+);
+router.put(
+  "/locations/:locationId/services/:serviceId",
+  Location.addLocationService.validators,
+  Location.addLocationService
 );
 
 // new change
