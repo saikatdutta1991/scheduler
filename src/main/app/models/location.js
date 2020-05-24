@@ -25,6 +25,21 @@ class Location extends Base {
       closeTime: Joi.string().pattern(/^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/),
     };
   }
+
+  static relationMappings = {
+    services: {
+      relation: Base.ManyToManyRelation,
+      modelClass: `${__dirname}/service`,
+      join: {
+        from: "locations.id",
+        through: {
+          from: "location_services.locationId",
+          to: "location_services.serviceId",
+        },
+        to: "services.id",
+      },
+    },
+  };
 }
 
 module.exports = Location;

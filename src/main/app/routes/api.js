@@ -86,6 +86,11 @@ router.put(
   Location.addLocationService.validators,
   Location.addLocationService
 );
+router.get(
+  "/locations/:locationId/services",
+  Location.getLocationServices.validators,
+  Location.getLocationServices
+);
 
 // new change
 /** 

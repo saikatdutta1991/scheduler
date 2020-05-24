@@ -12,6 +12,17 @@ class Location extends BaseController {
     return ["id"];
   }
 
+  static async getLocationServices(req, res) {
+    const { locationId: id } = req.params;
+    const location = await LocationModel.query()
+      .where({ id })
+      .withGraphFetched("services")
+      .first();
+    return sendResponse(res, codes.OK, "OK", "Services fetched", {
+      services: location.services,
+    });
+  }
+
   static async addLocationService(req, res) {
     const { locationId, serviceId } = req.params;
 
@@ -46,6 +57,15 @@ Location.addLocationService.validators = [
   ),
   ifExists(LocationModel, "id", "params.locationId"),
   ifExists(ServiceModel, "id", "params.serviceId"),
+];
+
+Location.getLocationServices.validators = [
+  validator.params(
+    Joi.object({
+      locationId: LocationModel.validationRules.id.required(),
+    })
+  ),
+  ifExists(LocationModel, "id", "params.locationId"),
 ];
 
 module.exports = Location;
