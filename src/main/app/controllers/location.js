@@ -5,11 +5,20 @@ const validator = require("../commons/validator");
 const ifExists = require("../middlewares/ifExists");
 const LocationModel = require("../models/location");
 const ServiceModel = require("../models/service");
+const ResourceModel = require("../models/resource");
 const LocationServiceModel = require("../models/locationService");
 const BaseController = require("./base");
 class Location extends BaseController {
   static get validatorOptionalRules() {
     return ["id"];
+  }
+
+  static async getResources(req, res) {
+    const { locationId } = req.params;
+    const resources = await ResourceModel.query().where({ locationId });
+    return sendResponse(res, codes.OK, "OK", "Resources fetched", {
+      resources,
+    });
   }
 
   static async getLocationServices(req, res) {
@@ -55,8 +64,8 @@ Location.addLocationService.validators = [
       serviceId: LocationModel.validationRules.id.required(),
     })
   ),
-  ifExists(LocationModel, "id", "params.locationId"),
-  ifExists(ServiceModel, "id", "params.serviceId"),
+  ifExists(LocationModel, { key: "id", path: "params.locationId" }),
+  ifExists(ServiceModel, { key: "id", path: "params.serviceId" }),
 ];
 
 Location.getLocationServices.validators = [
@@ -65,7 +74,16 @@ Location.getLocationServices.validators = [
       locationId: LocationModel.validationRules.id.required(),
     })
   ),
-  ifExists(LocationModel, "id", "params.locationId"),
+  ifExists(LocationModel, { key: "id", path: "params.locationId" }),
+];
+
+Location.getResources.validators = [
+  validator.params(
+    Joi.object({
+      locationId: LocationModel.validationRules.id.required(),
+    })
+  ),
+  ifExists(LocationModel, { key: "id", path: "params.locationId" }),
 ];
 
 module.exports = Location;

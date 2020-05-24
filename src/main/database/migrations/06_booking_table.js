@@ -1,6 +1,6 @@
 exports.up = async (knex) => {
   await knex.raw('create extension if not exists "uuid-ossp"');
-  return knex.schema.createTable("events", function (table) {
+  return knex.schema.createTable("bookings", function (table) {
     table
       .uuid("id")
       .notNullable()
@@ -28,8 +28,13 @@ exports.up = async (knex) => {
       .onDelete("CASCADE");
     table.timestamp("startTime");
     table.timestamp("endTime");
-    table.string("type", 32); // Ex: booking, holiday
-    table.boolean("isConfirmed");
+    table.string("type", 32); // Ex: appointment|block
+    table.boolean("isInitiated").defaultTo(true);
+    table.boolean("isReserved").defaultTo(false);
+    table.boolean("isConfirmed").defaultTo(false);
+    table.boolean("isCanceled").defaultTo(false);
+    table.timestamp("canceledAt");
+    table.string("note", 512);
     table
       .timestamp("createdAt")
       .notNullable()

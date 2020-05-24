@@ -5,51 +5,40 @@ const Location = require("../controllers/location");
 const Service = require("../controllers/service");
 const Resource = require("../controllers/resource");
 const Guest = require("../controllers/guest");
-
-// const EventModel = require("../models/event")
-
-// const moment = require("moment-timezone");
-// console.log(moment('2020-05-23T01:00:00Z').utc())
-
-// const init = async () => {
-// await EventModel.query().delete();
-// const service = await ServiceModel.query().first();
-// const resource1 = await ResourceModel.query().first();
-// const resource2 = (await ResourceModel.query())[1];
-// console.log("resource1", resource1);
-// await EventModel.query().insert([
-//   {
-//     startTime: "2020-05-20T01:00:00Z",
-//     endTime: "2020-05-20T01:29:59Z",
-//   }
-// ]);
-// };
-// init();
-
-// const calculateIntervalBlocks = (startDate, endDate, duration) => {
-//   const blocks = [];
-//   while (startDate <= endDate) {
-//     const block = {
-//       start: startDate.clone(),
-//       end: startDate.add(duration, "minutes").clone().add(-1, "seconds"),
-//     };
-//     blocks.push(block);
-//   }
-//   return blocks;
-// };
-
-// const start = moment("2020-05-20T00:00:00Z");console.log('start', start)
-//   const end = moment("2020-05-20T23:59:59Z");console.log('end', end)
-//   console.time("blocks");
-//   const blocks = calculateIntervalBlocks(start, end, 60);console.log('blocks', blocks)
-//   console.timeEnd("blocks");
+const Booking = require("../controllers/booking");
 
 router.use(checkApiKey);
+
+router.post(
+  "/bookings",
+  Booking.generateBooking.validators,
+  Booking.generateBooking
+);
+router.get(
+  "/bookings/:id/slots",
+  Booking.getBookingSlots.validators,
+  Booking.getBookingSlots
+);
+router.post(
+  "/bookings/:id/reserve",
+  Booking.reserveBooking.validators,
+  Booking.reserveBooking
+);
+router.post(
+  "/bookings/:id/confirm",
+  Booking.confirmBooking.validators,
+  Booking.confirmBooking
+);
 
 router.put("/guests", Guest.validators, Guest.create.bind(Guest));
 router.get("/guests", Guest.all.bind(Guest));
 router.get("/guests/:id", Guest.one.bind(Guest));
 router.delete("/guests/:id", Guest.deleteValidators, Guest.delete.bind(Guest));
+router.get(
+  "/guests/:id/bookings",
+  Guest.getBookings.validators,
+  Guest.getBookings
+);
 
 router.put(
   "/resources",
@@ -91,90 +80,11 @@ router.get(
   Location.getLocationServices.validators,
   Location.getLocationServices
 );
-
-// new change
-/** 
-
-
-
-
-const isEventInsideBlock = (event, block) => {
-  if (block.start <= event.startTime && block.end >= event.startTime) {
-    return true;
-  } else if (block.start <= event.endTime && block.end >= event.endTime) {
-    return true;
-  }
-  return false;
-};
-
-router.get("/slots", async (req, res) => {
-  const start = moment("2020-05-20T00:00:00Z");
-  const end = moment("2020-05-20T23:59:59Z");
-  console.time("blocks");
-  const blocks = calculateIntervalBlocks(start, end, 30);
-  console.timeEnd("blocks");
-
-  console.log("resources");
-  const resources = await ResourceModel.query().select("id");
-  const resourceIds = resources.map((r) => r.id);
-  console.log(resourceIds);
-  console.timeEnd("resources");
-
-  console.time("resourceEvents");
-  const events = await EventModel.query()
-    .select("id", "resourceId", "startTime", "endTime")
-    .whereIn("resourceId", resourceIds)
-    .where("startTime", "<", start)
-    .orWhere("endTime", ">", end);
-
-  const resourceEvents = {};
-  _.each(resourceIds, (rId) => {
-    if (!resourceEvents[rId]) {
-      resourceEvents[rId] = [];
-    }
-
-    // Check which events are for current resource
-    _.each(events, (event) => {
-      if (event.resourceId === rId) {
-        resourceEvents[rId].push(event);
-      }
-    });
-  });
-  console.log(resourceEvents);
-  console.timeEnd("resourceEvents");
-
-  const withResouceId = true;
-  const availBlocks = [];
-  _.each(blocks, (block) => {
-    let isAvailable = false;
-    for (rId in resourceEvents) {
-      let isInsideResouceEvent = false;
-      for (event of resourceEvents[rId]) {
-        if (isEventInsideBlock(event, block)) {
-          isInsideResouceEvent = true;
-        }
-      }
-      isAvailable = !(isInsideResouceEvent && !isAvailable);
-
-      if (isAvailable && withResouceId) {
-        availBlocks.push(_.merge(_.clone(block), { resouceId: rId }));
-      }
-    }
-    if (isAvailable && !withResouceId) {
-      availBlocks.push(block);
-    }
-  });
-
-  return sendResponse(res, codes.OK, "OK", "Ok", {
-    curr: moment(),
-    test: moment("2020-05-20T00:30:00Z"),
-    alen: availBlocks.length,
-    availBlocks,
-    len: blocks.length,
-    blocks,
-  });
-});
-*/
+router.get(
+  "/locations/:locationId/resources",
+  Location.getResources.validators,
+  Location.getResources
+);
 
 router.get("/", (req, res) => {
   return sendResponse(res, codes.OK, "OK", "Ok");

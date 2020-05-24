@@ -9,7 +9,13 @@ class Resource extends BaseController {
 
   static get createValidators() {
     const v = this.validators;
-    v.push(ifExists(LocationModel, "id", "body.locationId"));
+    v.push(
+      ifExists(LocationModel, {
+        key: "id",
+        path: "body.locationId",
+        isOptional: true,
+      })
+    );
     return v;
   }
 }

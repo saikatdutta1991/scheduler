@@ -22,6 +22,12 @@ module.exports = {
     FORBIDDEN: 403,
   },
   constants: {
+    booking: {
+      type: {
+        BLOCK: "block",
+        APPOINTMENT: "appointment",
+      },
+    },
     role: {
       USER: "user",
       ADMIN: "admin",

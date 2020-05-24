@@ -2,6 +2,7 @@ const LocationModel = require("../../app/models/location");
 const ServiceModel = require("../../app/models/service");
 const LocationServiceModel = require("../../app/models/locationService");
 const ResourceModel = require("../../app/models/resource");
+const GuestModel = require("../../app/models/guest");
 
 const seed = async (next) => {
   // Check if no location records exist
@@ -67,16 +68,28 @@ const seed = async (next) => {
     // Insert resource
     await ResourceModel.query().insert([
       {
+        id: "028b177e-9726-44fe-891a-53a68533fa26",
         locationId: "f48ae944-a70a-4cbd-abfb-71a8329338ac",
         firstName: "Alice",
         lastName: "A",
         email: "alice@mail.com",
       },
       {
+        id: "1f535f05-0625-4730-8ff6-0f3d2d1da6e3",
         locationId: "f48ae944-a70a-4cbd-abfb-71a8329338ac",
         firstName: "Bob",
         lastName: "B",
         email: "b@mail.com",
+      },
+    ]);
+
+    // Insert guest
+    await GuestModel.query().insert([
+      {
+        id: "6cfdebb1-4674-4749-ba02-22774d5975c7",
+        firstName: "Guest",
+        lastName: "G",
+        email: "guest@mail.com",
       },
     ]);
   }

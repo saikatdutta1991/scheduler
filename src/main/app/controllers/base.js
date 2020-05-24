@@ -47,7 +47,7 @@ class BaseController {
       validator.params(
         Joi.object({ id: this.model.validationRules.id.required() })
       ),
-      ifExists(this.model, "id", "params.id"),
+      ifExists(this.model, { key: "id", path: "params.id" }),
     ];
   }
 

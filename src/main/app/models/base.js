@@ -6,6 +6,7 @@ const { Model } = require("objection");
 const ChunkQueryBuilder = require("./chunkQueryBuilder");
 const date = require("../commons/date");
 const _ = require("lodash");
+const moment = require("moment");
 
 Model.knex(knex); // pass the knex instance to Objection
 
@@ -15,12 +16,12 @@ class Base extends Model {
   }
 
   $beforeInsert() {
-    this.createdAt = date.nowString();
-    this.updatedAt = date.nowString();
+    this.createdAt = moment().utc();
+    this.updatedAt = moment().utc();
   }
 
   $beforeUpdate() {
-    this.updatedAt = date.nowString();
+    this.updatedAt = moment().utc();
   }
 
   get $secureFields() {
