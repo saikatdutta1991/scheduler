@@ -1,5 +1,4 @@
 const Joi = require("@hapi/joi").extend(require("@hapi/joi-date"));
-const Boom = require("@hapi/boom");
 const _ = require("lodash");
 const validator = require("../commons/validator");
 const ifExists = require("../middlewares/ifExists");
@@ -8,6 +7,7 @@ const ServiceModel = require("../models/service");
 const ResourceModel = require("../models/resource");
 const LocationServiceModel = require("../models/locationService");
 const BookingHelper = require("../commons/helpers/booking");
+const moment = require("moment");
 const BaseController = require("./base");
 class Location extends BaseController {
   static get validatorOptionalRules() {
@@ -21,8 +21,8 @@ class Location extends BaseController {
 
     const events = await BookingHelper.getLocationBlockedEvents(
       locationId,
-      startDate,
-      endDate,
+      moment(startDate).utc().startOf("day"),
+      moment(endDate).utc().endOf("day"),
       resourceIds
     );
 
@@ -78,8 +78,8 @@ class Location extends BaseController {
 Location.getBlockedSlots.validators = [
   validator.query(
     Joi.object({
-      startDate: Joi.date().iso().required(),
-      endDate: Joi.date().utc().iso().required(),
+      startDate: Joi.date().format("YYYY-MM-DD").utc().required(),
+      endDate: Joi.date().format("YYYY-MM-DD").utc().required(),
       resourceIds: Joi.string()
         .pattern(/[^,\s][^\,]*[^,\s]*$/)
         .optional(),
