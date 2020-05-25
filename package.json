@@ -1,5 +1,5 @@
 {
-  "name": "wallet",
+  "name": "scheduler",
   "version": "1.0.0",
   "description": "This is completely seperate wallet service",
   "main": "index.js",

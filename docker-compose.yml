@@ -8,6 +8,7 @@ services:
     ports:
       - "5432:5432"
     environment:
+      POSTGRES_DB: scheduler
       POSTGRES_PASSWORD: postgres
     volumes:
       - $PWD/postgres-data:/var/lib/postgresql/data
@@ -38,7 +39,7 @@ services:
       - NODE_ENV=docker
     command: sh -c 'npm i && npm run deploy:docker'
     restart: on-failure
-    links:
+    depends_on:
       - postgresdb
       - adminer
       - redis
