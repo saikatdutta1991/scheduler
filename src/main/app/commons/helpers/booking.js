@@ -128,7 +128,15 @@ const overLappingSlotQueryBuilder = (startTime, endTime) => {
       this.where("startTime", "<=", endTime).where("endTime", ">=", startTime);
     })
     .where(function () {
-      this.where({ isReserved: true }).orWhere({ isConfirmed: true });
+      this.where({ type: constants.booking.type.BLOCK }).orWhere(function () {
+        this.where({ type: constants.booking.type.APPOINTMENT })
+          .where(function () {
+            this.where({ isReserved: true }).orWhere({ isConfirmed: true });
+          })
+          .where(function () {
+            this.where({ isCanceled: false }).orWhere({ isCanceled: null });
+          });
+      });
     });
 };
 
@@ -141,10 +149,7 @@ const getResourceBlockingEvents = async (
   const events = await overLappingSlotQueryBuilder(startTime, endTime)
     .select("id", "resourceId", "startTime", "endTime")
     .where({ locationId })
-    .whereIn("resourceId", resourceIds)
-    .where(function () {
-      this.where({ isReserved: true }).orWhere({ isConfirmed: true });
-    });
+    .whereIn("resourceId", resourceIds);
 
   const resourceEvents = {};
 
@@ -252,6 +257,7 @@ const getLocationBlockedEvents = async (
       "id",
       "serviceId",
       "resourceId",
+      "type",
       "guestId",
       "startTime",
       "endTime",
