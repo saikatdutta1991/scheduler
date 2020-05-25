@@ -1,4 +1,4 @@
-const Joi = require("@hapi/joi");
+const Joi = require("@hapi/joi").extend(require("@hapi/joi-date"));
 const Boom = require("@hapi/boom");
 const _ = require("lodash");
 const validator = require("../commons/validator");
@@ -7,10 +7,28 @@ const LocationModel = require("../models/location");
 const ServiceModel = require("../models/service");
 const ResourceModel = require("../models/resource");
 const LocationServiceModel = require("../models/locationService");
+const BookingHelper = require("../commons/helpers/booking");
 const BaseController = require("./base");
 class Location extends BaseController {
   static get validatorOptionalRules() {
     return ["id"];
+  }
+
+  static async getBlockedSlots(req, res) {
+    const { locationId } = req.params;
+    const { startDate, endDate, resourceIds: resourceIdsStr } = req.query;
+    const resourceIds = resourceIdsStr ? resourceIdsStr.split(",") : [];
+
+    const events = await BookingHelper.getLocationBlockedEvents(
+      locationId,
+      startDate,
+      endDate,
+      resourceIds
+    );
+
+    return sendResponse(res, codes.OK, "OK", "Blocked events fetched", {
+      events,
+    });
   }
 
   static async getResources(req, res) {
@@ -56,6 +74,24 @@ class Location extends BaseController {
     );
   }
 }
+
+Location.getBlockedSlots.validators = [
+  validator.query(
+    Joi.object({
+      startDate: Joi.date().iso().required(),
+      endDate: Joi.date().utc().iso().required(),
+      resourceIds: Joi.string()
+        .pattern(/[^,\s][^\,]*[^,\s]*$/)
+        .optional(),
+    })
+  ),
+  validator.params(
+    Joi.object({
+      locationId: LocationModel.validationRules.id.required(),
+    })
+  ),
+  ifExists(LocationModel, { key: "id", path: "params.locationId" }),
+];
 
 Location.addLocationService.validators = [
   validator.params(

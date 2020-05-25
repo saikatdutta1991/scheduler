@@ -85,6 +85,11 @@ router.get(
   Location.getResources.validators,
   Location.getResources
 );
+router.get(
+  "/locations/:locationId/blocked-slots",
+  Location.getBlockedSlots.validators,
+  Location.getBlockedSlots
+);
 
 router.get("/", (req, res) => {
   return sendResponse(res, codes.OK, "OK", "Ok");

@@ -241,9 +241,39 @@ const getLocationTimes = async (id, date) => {
   return { startTime, endTime };
 };
 
+const getLocationBlockedEvents = async (
+  locationId,
+  startDate,
+  endDate,
+  resourceIds
+) => {
+  let events = overLappingSlotQueryBuilder(startDate, endDate)
+    .select(
+      "id",
+      "serviceId",
+      "resourceId",
+      "guestId",
+      "startTime",
+      "endTime",
+      "isReserved",
+      "isConfirmed",
+      "isCanceled"
+    )
+    .where({
+      locationId,
+    });
+
+  if (resourceIds.length) {
+    events = events.whereIn("resourceId", resourceIds);
+  }
+
+  return await events;
+};
+
 module.exports = {
   generateBookingId,
   getBookingSlots,
   reserveBooking,
   confirmBooking,
+  getLocationBlockedEvents,
 };
