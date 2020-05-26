@@ -11,7 +11,6 @@ const ifExists = (model, { key, path, isOptional = false }) => {
 
     // If record does not exits
     if (value !== null && record === undefined && isOptional === true) {
-      console.log("asfdsafd");
       throw Boom.notFound(`${model.name} not found.`);
     }
 
