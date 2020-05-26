@@ -7,6 +7,14 @@ const moment = require("moment");
 const _ = require("lodash");
 const Boom = require("@hapi/boom");
 
+const cancelBooking = async (booking) => {
+  // Cancel booking
+  return await BookingModel.query().updateAndFetchById(booking.id, {
+    isCanceled: true,
+    canceledAt: moment().utc(),
+  });
+};
+
 const confirmBooking = async (booking, guestId, note) => {
   // Confirm the booking
   return await BookingModel.query().updateAndFetchById(booking.id, {
@@ -281,5 +289,6 @@ module.exports = {
   getBookingSlots,
   reserveBooking,
   confirmBooking,
+  cancelBooking,
   getLocationBlockedEvents,
 };

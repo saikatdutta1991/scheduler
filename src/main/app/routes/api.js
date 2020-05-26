@@ -29,6 +29,7 @@ router.post(
   Booking.confirmBooking.validators,
   Booking.confirmBooking
 );
+router.delete("/bookings/:id", Booking.cancelBooking);
 
 router.put("/guests", Guest.validators, Guest.create.bind(Guest));
 router.get("/guests", Guest.all.bind(Guest));

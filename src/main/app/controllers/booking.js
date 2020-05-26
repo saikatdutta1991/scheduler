@@ -10,6 +10,31 @@ const ifExists = require("../middlewares/ifExists");
 const BookingHelper = require("../commons/helpers/booking");
 
 class Booking {
+  static async cancelBooking(req, res) {
+    const { id } = req.params;
+    const booking = await BookingModel.query()
+      .where({
+        id,
+        type: constants.booking.type.APPOINTMENT,
+        isInitiated: true,
+        isReserved: true,
+        isConfirmed: true,
+      })
+      .where(function () {
+        this.where({ isCanceled: false }).where({ isCanceled: null });
+      })
+      .first();
+
+    if (!booking) {
+      throw Boom.notFound(`Booking not found`);
+    }
+
+    const canceledBooking = await BookingHelper.cancelBooking(booking);
+    return sendResponse(res, codes.OK, "OK", "Booking canceled", {
+      canceledBooking,
+    });
+  }
+
   static async confirmBooking(req, res) {
     const { id } = req.params;
     const { guestId, note } = req.body;
