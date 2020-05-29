@@ -14,22 +14,22 @@ class Location extends BaseController {
     return ["id"];
   }
 
-  static async getBlockedSlots(req, res) {
-    const { locationId } = req.params;
-    const { startDate, endDate, resourceIds: resourceIdsStr } = req.query;
-    const resourceIds = resourceIdsStr ? resourceIdsStr.split(",") : [];
+  // static async getBlockedSlots(req, res) {
+  //   const { locationId } = req.params;
+  //   const { startDate, endDate, resourceIds: resourceIdsStr } = req.query;
+  //   const resourceIds = resourceIdsStr ? resourceIdsStr.split(",") : [];
 
-    const events = await BookingHelper.getLocationBlockedEvents(
-      locationId,
-      moment(startDate).utc().startOf("day"),
-      moment(endDate).utc().endOf("day"),
-      resourceIds
-    );
+  //   const events = await BookingHelper.getLocationBlockedEvents(
+  //     locationId,
+  //     moment(startDate).utc().startOf("day"),
+  //     moment(endDate).utc().endOf("day"),
+  //     resourceIds
+  //   );
 
-    return sendResponse(res, codes.OK, "OK", "Blocked events fetched", {
-      events,
-    });
-  }
+  //   return sendResponse(res, codes.OK, "OK", "Blocked events fetched", {
+  //     events,
+  //   });
+  // }
 
   static async getResources(req, res) {
     const { locationId } = req.params;
@@ -75,23 +75,23 @@ class Location extends BaseController {
   }
 }
 
-Location.getBlockedSlots.validators = [
-  validator.query(
-    Joi.object({
-      startDate: Joi.date().format("YYYY-MM-DD").utc().required(),
-      endDate: Joi.date().format("YYYY-MM-DD").utc().required(),
-      resourceIds: Joi.string()
-        .pattern(/[^,\s][^\,]*[^,\s]*$/)
-        .optional(),
-    })
-  ),
-  validator.params(
-    Joi.object({
-      locationId: LocationModel.validationRules.id.required(),
-    })
-  ),
-  ifExists(LocationModel, { key: "id", path: "params.locationId" }),
-];
+// Location.getBlockedSlots.validators = [
+//   validator.query(
+//     Joi.object({
+//       startDate: Joi.date().format("YYYY-MM-DD").utc().required(),
+//       endDate: Joi.date().format("YYYY-MM-DD").utc().required(),
+//       resourceIds: Joi.string()
+//         .pattern(/[^,\s][^\,]*[^,\s]*$/)
+//         .optional(),
+//     })
+//   ),
+//   validator.params(
+//     Joi.object({
+//       locationId: LocationModel.validationRules.id.required(),
+//     })
+//   ),
+//   ifExists(LocationModel, { key: "id", path: "params.locationId" }),
+// ];
 
 Location.addLocationService.validators = [
   validator.params(

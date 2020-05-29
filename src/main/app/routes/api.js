@@ -29,6 +29,7 @@ router.post(
   Booking.confirmBooking.validators,
   Booking.confirmBooking
 );
+router.get("/bookings", Booking.getBookings.validators, Booking.getBookings);
 router.delete("/bookings/:id", Booking.cancelBooking);
 
 router.put("/guests", Guest.validators, Guest.create.bind(Guest));
@@ -85,11 +86,6 @@ router.get(
   "/locations/:locationId/resources",
   Location.getResources.validators,
   Location.getResources
-);
-router.get(
-  "/locations/:locationId/blocked-slots",
-  Location.getBlockedSlots.validators,
-  Location.getBlockedSlots
 );
 
 router.get("/", (req, res) => {

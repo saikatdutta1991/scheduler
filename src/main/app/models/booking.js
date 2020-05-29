@@ -24,6 +24,17 @@ class Booking extends Base {
       note: Joi.string().min(1).max(512),
     };
   }
+
+  static relationMappings = {
+    guest: {
+      relation: Base.BelongsToOneRelation,
+      modelClass: `${__dirname}/guest`,
+      join: {
+        from: "bookings.guestId",
+        to: "guests.id",
+      },
+    },
+  };
 }
 
 module.exports = Booking;

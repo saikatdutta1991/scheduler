@@ -8,8 +8,35 @@ const Joi = require("@hapi/joi").extend(require("@hapi/joi-date"));
 const Boom = require("@hapi/boom");
 const ifExists = require("../middlewares/ifExists");
 const BookingHelper = require("../commons/helpers/booking");
+const moment = require("moment");
 
 class Booking {
+  static async getBookings(req, res) {
+    const { locationId, guestId, startDate, endDate } = req.query;
+
+    // Fetch bookings from db
+    let bookingsQuery = BookingModel.query()
+      .withGraphJoined("guest")
+      .where({
+        isConfirmed: true,
+        locationId,
+      })
+      .whereBetween("startTime", [
+        moment(startDate).utc().startOf("day"),
+        moment(endDate).utc().endOf("day"),
+      ]);
+
+    if (guestId) {
+      bookingsQuery = bookingsQuery.where({ guestId });
+    }
+
+    const bookings = await bookingsQuery;
+
+    return sendResponse(res, codes.OK, "OK", "Bookings fetched", {
+      bookings,
+    });
+  }
+
   static async cancelBooking(req, res) {
     const { id } = req.params;
     const booking = await BookingModel.query()
@@ -123,6 +150,18 @@ class Booking {
     });
   }
 }
+
+// Get bookings validators
+Booking.getBookings.validators = [
+  validator.query(
+    Joi.object({
+      locationId: BookingModel.validationRules.locationId.required(),
+      guestId: BookingModel.validationRules.guestId.optional(),
+      startDate: Joi.date().format("YYYY-MM-DD").utc().required(),
+      endDate: Joi.date().format("YYYY-MM-DD").utc().required(),
+    })
+  ),
+];
 
 // Get booking slots validation
 Booking.getBookingSlots.validators = [
