@@ -48,7 +48,7 @@ class Booking {
         isConfirmed: true,
       })
       .where(function () {
-        this.where({ isCanceled: false }).where({ isCanceled: null });
+        this.where({ isCanceled: false }).orWhere({ isCanceled: null });
       })
       .first();
 
