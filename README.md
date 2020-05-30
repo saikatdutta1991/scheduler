@@ -83,3 +83,5 @@ docker-compose up -d
  
  *Note :  if heroku set the .env
 ```
+## API Documentation
+- [Postman API docs](http://https://documenter.getpostman.com/view/3133283/Szt8fAc5 "Postman API docs")
