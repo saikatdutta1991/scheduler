@@ -1,5 +1,6 @@
 # Scheduler
-NodeJs Resource Booking Service
+This is a stand-alone service that helps to manage the resource time. It can be used to create an application like doctor booking, hotel room booking, hair cut booking, etc. It is capable of storing bookings for unlimited future days. This service is written in NodeJS
+
 
 All Apis will respond with proper HTTP Response Code. A 200OK response code means success. Any response code other than 200OK means something wrong happend.
 
