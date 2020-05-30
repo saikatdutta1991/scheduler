@@ -73,7 +73,7 @@ Run the command to start all the services. ```.env.docker``` is included already
 ```shell
 docker-compose up -d
 ```
-#### Using 
+#### Using npm
 ```shell
  Open terminal and move to the root directory.  Do the following steps :
  # To start server
