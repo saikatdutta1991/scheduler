@@ -20,8 +20,18 @@ Note: All the APIs base is ```{host}/api/v1``` included.
 ## Installation
 
 ### Generate API Client Token
-### Environment Setup
-### Install Packages
+To generate api key and client token run the following key. The ```api key``` is to add in the enviroment config file and the client token is to get access to the APIs.
+```shell
+NODE_ENV=development npm run apikey:generate
+```
+Sample output : 
+```shell
+# Set the below api auth key in your env file as API_AUTH_KEY
+API Auth Key : 6a274de2-e3b0-4ac8-a1e2-1f0a4ea79ac7
+
+API Client Token (To access the apis): 
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlBdXRoS2V5IjoiNmEyNzRkZTItZTNiMC00YWM4LWExZTItMWYwYTRlYTc5YWM3Iiwic3ViIjowLCJpc3MiOiJTY2hlZHVsZXIiLCJpYXQiOjE1OTA3NTg1MzJ9.dEpniAzPDtjkpzS8-9qR1Q8toaLMlnCMtzH0OOYF76M
+```
 ### Environment Setup
 #### Sample .env file content
 ```shell
@@ -44,42 +54,28 @@ REDIS_PASSWORD=sOmE_sEcUrE_pAsS
 API_AUTH_KEY=6a274de2-e3b0-4ac8-a1e2-1f0a4ea79ac7
 ```
 #### Correct naming of .env files
-```shell
- Create .env.development & .env.production files in root directory.
- Clone the .env.sample into above two files and change the values accordingly.
-```
+The ```.env``` file must include the node enviroment variable value. If ```NODE_ENV=development``` then ```.env``` file name should be ```.env.development```. In the project by default has a ```.env.docker```file which is used when running the app using docker-compose.
 
-### .env.sample
+### Install Packages & Dependencies
 ```shell
-NODE_ENV=development
-PORT=3000
-APP_NAME=nodejs-jumpstart
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_DATABASE=nodejs-jumpstart
-DB_USERNAME=root
-DB_PASSWORD=
-DB_PORT=3306
-FIREBASE_API_KEY=
-JWT_SECRET=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_S3_BUCKET=nodejs-jumpstart
-```
-
-## Run
-```javascript
- Open terminal and move to the root directory.  Do the following steps :
- 
- # Insall npm dependencies.
- > npm install
+# Insall npm dependencies.
+ npm install
  
  # To create migration files
 NODE_ENV=development ./node_modules/.bin/knex migrate:make users
  
  # Run migration to create tables
- > NODE_ENV=development ./node_modules/.bin/knex migrate:latest
- 
+ NODE_ENV=development ./node_modules/.bin/knex migrate:latest
+```
+### Run
+#### Using docker-compose
+Run the command to start all the services. ```.env.docker``` is included already in the project root directory. If required, it can be modified accordingly. Very handy when testing the project.
+```shell
+docker-compose up -d
+```
+#### Using 
+```shell
+ Open terminal and move to the root directory.  Do the following steps :
  # To start server
  > npm run dev
  	or
