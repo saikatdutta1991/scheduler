@@ -19,15 +19,10 @@ router.get(
   Booking.getBookingSlots.validators,
   Booking.getBookingSlots
 );
-router.post(
-  "/bookings/:id/reserve",
-  Booking.reserveBooking.validators,
-  Booking.reserveBooking
-);
-router.post(
-  "/bookings/:id/confirm",
-  Booking.confirmBooking.validators,
-  Booking.confirmBooking
+router.patch(
+  "/bookings/:id",
+  Booking.reserveAndConfirm.validators,
+  Booking.reserveAndConfirm
 );
 router.get("/bookings", Booking.getBookings.validators, Booking.getBookings);
 router.delete("/bookings/:id", Booking.cancelBooking);

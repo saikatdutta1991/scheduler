@@ -62,38 +62,12 @@ class Booking {
     });
   }
 
-  static async confirmBooking(req, res) {
+  static async reserveAndConfirm(req, res) {
     const { id } = req.params;
-    const { guestId, note } = req.body;
-
-    // Fetch booking type appointment
-    const booking = await BookingModel.query()
-      .where({
-        id,
-        type: constants.booking.type.APPOINTMENT,
-        isInitiated: true,
-        isReserved: true,
-        isConfirmed: false,
-      })
-      .first();
-
-    if (!booking) {
-      throw Boom.notFound(`Booking not found or expired or confirmed`);
-    }
-
-    const confirmedBooking = await BookingHelper.confirmBooking(
-      booking,
-      guestId,
-      note
-    );
-    return sendResponse(res, codes.OK, "OK", "Booking confirmed", {
-      confirmedBooking,
-    });
-  }
-
-  static async reserveBooking(req, res) {
-    const { id } = req.params;
-    const { slotTime } = req.body;
+    const {
+      action,
+      data: { slotTime, guestId, note },
+    } = req.body;
 
     // Fetch booking if status init and type appointment
     const booking = await BookingModel.query()
@@ -101,21 +75,48 @@ class Booking {
         id,
         type: constants.booking.type.APPOINTMENT,
         isInitiated: true,
-        isReserved: false,
+      })
+      .where(function () {
+        this.where({ isCanceled: false }).orWhere({ isCanceled: null });
       })
       .first();
 
     if (!booking) {
-      throw Boom.notFound(`Booking not found or expired or confirmed`);
+      throw Boom.notFound(`Booking not found`);
     }
 
-    const reservedBooking = await BookingHelper.reserveBooking(
-      booking,
-      slotTime
-    );
-    return sendResponse(res, codes.OK, "OK", "Booking reserved", {
-      reservedBooking,
-    });
+    switch (action) {
+      case "reserve":
+        // Check if booking is reserved already
+        if (booking.isReserved === true) {
+          throw Boom.badRequest(`Booking is reserved already.`);
+        }
+
+        const reservedBooking = await BookingHelper.reserveBooking(
+          booking,
+          slotTime
+        );
+        return sendResponse(res, codes.OK, "OK", "Booking reserved", {
+          reservedBooking,
+        });
+        break;
+
+      case "confirm":
+        // Check if booking is reserved already
+        if (booking.isConfirmed === true) {
+          throw Boom.badRequest(`Booking is confirmed already.`);
+        }
+
+        const confirmedBooking = await BookingHelper.confirmBooking(
+          booking,
+          guestId,
+          note
+        );
+        return sendResponse(res, codes.OK, "OK", "Booking confirmed", {
+          confirmedBooking,
+        });
+        break;
+    }
   }
 
   static async getBookingSlots(req, res) {
@@ -177,8 +178,8 @@ Booking.getBookingSlots.validators = [
   ),
 ];
 
-// Cofirm booking validations
-Booking.confirmBooking.validators = [
+// Reserve and confirm validators
+Booking.reserveAndConfirm.validators = [
   validator.params(
     Joi.object({
       id: BookingModel.validationRules.id.required(),
@@ -186,25 +187,33 @@ Booking.confirmBooking.validators = [
   ),
   validator.body(
     Joi.object({
-      guestId: BookingModel.validationRules.guestId.optional(),
-      note: BookingModel.validationRules.note.optional(),
+      action: Joi.string().valid("reserve", "confirm").required(),
+      data: Joi.when("action", [
+        {
+          is: "reserve",
+          then: Joi.object({
+            slotTime: Joi.date().utc().iso().required(),
+          }).required(),
+        },
+        {
+          is: "confirm",
+          then: Joi.object({
+            guestId: BookingModel.validationRules.guestId.optional(),
+            note: BookingModel.validationRules.note.required(),
+          }).required(),
+        },
+      ]).required(),
     })
   ),
-  ifExists(GuestModel, { key: "id", path: "body.guestId", isOptional: true }),
-];
-
-// Reserve booking validations
-Booking.reserveBooking.validators = [
-  validator.params(
-    Joi.object({
-      id: BookingModel.validationRules.id.required(),
-    })
-  ),
-  validator.body(
-    Joi.object({
-      slotTime: Joi.date().utc().iso().required(),
-    })
-  ),
+  ifExists(BookingModel, {
+    key: "id",
+    path: "param.id",
+  }),
+  ifExists(GuestModel, {
+    key: "id",
+    path: "body.data.guestId",
+    isOptional: true,
+  }),
 ];
 
 // Generate booking Validations
