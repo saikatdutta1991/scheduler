@@ -1,76 +1,49 @@
 # Scheduler
 This is a stand-alone service that helps to manage the resource time. It can be used to create an application like doctor booking, hotel room booking, hair cut booking, etc. It is capable of storing bookings for unlimited future days. This service is written in NodeJS
 
+The HTTP REST APIs are pretty simple and straight forward. 200OK for the success response. All the APIs are guarded by an`apiClientToken` that token is required to be passed with each API call in the header `Authorization`.
 
-All Apis will respond with proper HTTP Response Code. A 200OK response code means success. Any response code other than 200OK means something wrong happend.
-
-All apis accept request content type `application/json`. If other than this required, content type will be documented with the api.
-
-Sample error JSON response:
-
-```json
-// throw Boom.badImplementation("Submit reasons failed");
-{
-	"type": "Bad Request",
-	"message": "Reason text already exists",
-	"data": null
-}
-
-// sendResponse(res, codes.OK, "Ok", "User fetched", { user });
+```
+Sample apiClient token
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlBdXRoS2V5IjoiNmEyNzRkZTItZTNiMC00YWM4LWExZTItMWYwYTRlYTc5YWM3Iiwic3ViIjowLCJpc3MiOiJTY2hlZHVsZXIiLCJpYXQiOjE1OTA3NTg1MzJ9.dEpniAzPDtjkpzS8-9qR1Q8toaLMlnCMtzH0OOYF76M
 ```
 
-## Used Libraries
+Entities :
+1. Location - It is the place where a resource does its job.
+2. Service - The system can have multiple types of services linked with a location.
+3. Resouce - This does the actual job for the given blocked time-slot.
+4. Guest - This is the least usable entity. It is just used for showing booking details in the dashboard and keep track of the main application system.
+5. Booking - This holds all the bookings made by a user.
+
+Note: All the APIs base is ```{host}/api/v1``` included.
+
+## Installation
+
+### Generate API Client Token
+### Environment Setup
+### Install Packages
+### Environment Setup
+#### Sample .env file content
 ```shell
-"@hapi/boom": "^9.1.0"
-"@hapi/joi": "^17.1.1",
-"aws-sdk": "^2.653.0",
-"body-parser": "^1.19.0",
-"dotenv": "^8.2.0",
-"express": "^4.17.1",
-"express-async-errors": "^3.1.1",
-"express-joi-validation": "^4.0.3",
-"firebase": "^7.13.2",
-"jsonwebtoken": "^8.5.1",
-"knex": "^0.20.10",
-"lodash": "^4.17.15",
-"log4js": "^6.1.2",
-"moment": "^2.24.0",
-"multer": "^1.4.2",
-"mysql": "^2.18.1",
-"node-cron": "^2.0.3",
-"nodemon": "^2.0.2",
-"objection": "^2.1.3",
-"uuid": "^7.0.3"
+NODE_ENV=development
+PORT=3000
+APP_NAME=Scheduler
+DB_CONNECTION=pg
+DB_HOST=postgresdb
+DB_DATABASE=scheduler
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+FIREBASE_API_KEY=
+JWT_SECRET=sOmE_sEcUrE_pAsS
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET=
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=sOmE_sEcUrE_pAsS
+API_AUTH_KEY=6a274de2-e3b0-4ac8-a1e2-1f0a4ea79ac7
 ```
-
-## Directory Structure
-```shell
-|-- Root Directroy (wallet)
-    |-- .env --> Environment variables( run time will be cloned from specific .env )
-    |-- .env.development --> Environment variables for development
-    |-- .env.production --> Environment variables for production
-    |-- knexfile.js --> Config for knex migration commands
-    |-- package.json --> Node packages list
-    |-- bin --> Custom npm & usefull shell scripts
-    |-- docs --> Documentations
-    |-- src
-        |-- main
-            |-- index.js --> Entry point for express server
-            |-- app
-            |   |-- controllers --> Controllers files
-            |   |-- crons --> Cron jobs & files in this directory imported automatically
-            |   |-- commons --> All sort of helpers
-            |   |-- middlewares --> All sort of middlewares
-            |   |-- models --> All modes should be here
-            |   |-- routes --> Routes & files in this directory imported automatically
-            |-- boot --> Booting utilities
-            |-- config --> App configurations
-            |   |-- api.js --> Api related configs & constants
-            |   |-- database.js --> Databse configuration
-            |-- database --> Databasse table migrations and seeds
-```
-
-## Environment Setup
+#### Correct naming of .env files
 ```shell
  Create .env.development & .env.production files in root directory.
  Clone the .env.sample into above two files and change the values accordingly.
