@@ -1,4 +1,4 @@
-# Scheduler
+# Scheduler - Booking Upto Unlimited Future Days
 This is a stand-alone service that helps to manage the resource time. It can be used to create an application like doctor booking, hotel room booking, hair cut booking, etc. It is capable of storing bookings for unlimited future days. This service is written in NodeJS
 
 The HTTP REST APIs are pretty simple and straight forward. 200OK for the success response. All the APIs are guarded by an`apiClientToken` that token is required to be passed with each API call in the header `Authorization`.
