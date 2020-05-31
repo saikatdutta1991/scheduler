@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 require("express-async-errors"); // handle async route errors
 const errorHandler = require("./commons/errorHandler");
@@ -9,6 +10,10 @@ const SocketIOLoader = require("../boot/socket.io.loader");
 
 /** creating app instance */
 const app = express();
+
+// Share public assets
+
+app.use(express.static(path.join(__dirname, "../public")));
 
 /** cross domain api call */
 app.use(function (req, res, next) {

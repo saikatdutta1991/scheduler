@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scheduler</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body class="full-screen">
+    <div class="flex-center position-ref full-height">
+      <div style="text-align: center;">
+        <div class="title">Scheduler</div>
+        <div class="links">
+          <a href="">Locations</a>
+          <a href="">Services</a>
+          <a href="" id="bookingsLink">Bookings</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(async () => {
+        const locations = await getLocations();
+        const url = `/bookings.html?locationId=${locations[0].id}`;
+        $("#bookingsLink").attr("href", url);
+      });
+    </script>
+  </body>
+</html>

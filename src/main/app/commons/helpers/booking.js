@@ -43,7 +43,12 @@ const reserveBooking = async (booking, slotTime) => {
       throw Boom.resourceGone("No resources are available.");
     }
   } else if (
-    isResouceBlocked(booking.locationId, availResourceId, startTime, endTime)
+    await isResouceBlocked(
+      booking.locationId,
+      availResourceId,
+      startTime,
+      endTime
+    )
   ) {
     throw Boom.resourceGone(
       `Selected resouced id ${booking.resourceId} is blocked.`
