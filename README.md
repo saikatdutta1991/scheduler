@@ -17,6 +17,10 @@ Entities :
 
 Note: All the APIs base is ```{host}/api/v1``` included.
 
+## Screenshots
+![Main screen](https://raw.githubusercontent.com/saikatdutta1991/scheduler/master/screenshots/01.png "Main screen")
+![Booking screen](https://raw.githubusercontent.com/saikatdutta1991/scheduler/master/screenshots/02.png "Booking screen")
+
 ## Installation
 
 ### Generate API Client Token
