@@ -10,6 +10,7 @@ services:
     environment:
       POSTGRES_DB: scheduler
       POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: password
     volumes:
       - $PWD/postgres-data:/var/lib/postgresql/data
 
