@@ -40,6 +40,8 @@ exports.up = async (knex) => {
       .notNullable()
       .defaultTo(knex.raw("CURRENT_TIMESTAMP"));
     table.timestamp("updatedAt").defaultTo(knex.raw("CURRENT_TIMESTAMP"));
+
+    table.unique(["resourceId", "startTime", "endTime"]);
   });
 };
 
