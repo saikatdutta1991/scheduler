@@ -26,7 +26,7 @@ exports.up = async (knex) => {
       .references("id")
       .inTable("guests")
       .onDelete("CASCADE");
-    table.timestamp("startTime");
+    table.timestamp("startTime").defaultTo(knex.raw("CURRENT_TIMESTAMP"));
     table.timestamp("endTime");
     table.string("type", 32); // Ex: appointment|block
     table.boolean("isInitiated").defaultTo(true);

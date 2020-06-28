@@ -215,16 +215,13 @@ const generateBookingId = async ({
   guestId,
   date,
 }) => {
-  const { startTime, endTime } = await getLocationTimes(locationId, date);
-
   const booking = await BookingModel.query().insert({
     locationId,
     serviceId,
     resourceId,
     guestId,
     type: constants.booking.type.APPOINTMENT,
-    startTime,
-    endTime,
+    endTime: null,
     isInitiated: true,
     isReserved: false,
     isConfirmed: false,
@@ -234,30 +231,30 @@ const generateBookingId = async ({
   return booking;
 };
 
-const getLocationTimes = async (id, date) => {
-  // Fetch location open-close time
-  const { openTime: open, closeTime: close } = await LocationModel.query()
-    .select("openTime", "closeTime")
-    .where({
-      id,
-    })
-    .first();
+// const getLocationTimes = async (id, date) => {
+//   // Fetch location open-close time
+//   const { openTime: open, closeTime: close } = await LocationModel.query()
+//     .select("openTime", "closeTime")
+//     .where({
+//       id,
+//     })
+//     .first();
 
-  const [openH, openM, openS] = open.split(":");
-  const startTime = moment(date).utc().set({
-    h: openH,
-    m: openM,
-    s: openS,
-  });
-  const [closeH, closeM, closeS] = close.split(":");
-  const endTime = moment(date).utc().set({
-    h: closeH,
-    m: closeM,
-    s: closeS,
-  });
+//   const [openH, openM, openS] = open.split(":");
+//   const startTime = moment(date).utc().set({
+//     h: openH,
+//     m: openM,
+//     s: openS,
+//   });
+//   const [closeH, closeM, closeS] = close.split(":");
+//   const endTime = moment(date).utc().set({
+//     h: closeH,
+//     m: closeM,
+//     s: closeS,
+//   });
 
-  return { startTime, endTime };
-};
+//   return { startTime, endTime };
+// };
 
 module.exports = {
   generateBookingId,
